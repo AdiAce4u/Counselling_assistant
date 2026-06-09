@@ -1,0 +1,98 @@
+import os
+import gradio as gr
+from huggingface_hub import InferenceClient
+
+HF_TOKEN = os.environ.get("HF_TOKEN")
+
+
+BASE_MODEL = "Qwen/Qwen2.5-7B-Instruct"
+ADAPTER_ID = "sleepy-panda21/Llama_fine_tuned"  
+
+try:
+    client = InferenceClient(model=BASE_MODEL, token=HF_TOKEN)
+except Exception:
+    client = None
+
+def predict(message, history):
+    if not client:
+        yield "Configuration Error: Hugging Face Inference client failed to initialize."
+        return
+
+    messages = [
+        {
+            "role": "system",
+            "content": "You are an AI counseling assistant. Your role is to provide a warm, empathetic, and non-judgmental space."
+        }
+    ]
+    
+    for turn in history:
+        content = turn.get("content", "")
+        if isinstance(content, str):
+            messages.append({"role": turn.get("role", "user"), "content": content})
+        elif isinstance(content, (list, tuple)):
+            text_part = "".join([b.get("text", "") for b in content if isinstance(b, dict) and b.get("type") == "text"])
+            messages.append({"role": turn.get("role", "user"), "content": text_part})
+            
+    messages.append({"role": "user", "content": message})
+
+    response_text = ""
+    try:
+        
+        response_stream = client.chat_completion(
+            messages=messages,
+            max_tokens=250,
+            temperature=0.7,
+            stream=True,
+            extra_body={"adapter_id": ADAPTER_ID}
+        )
+        
+        for chunk in response_stream:
+            if chunk.choices and len(chunk.choices) > 0:
+                token = chunk.choices[0].delta.content
+                if token:
+                    response_text += token
+                    yield response_text 
+                
+    except Exception as e:
+        yield f"Connection Notice: {str(e)}\n\n(Note: The serverless endpoint may be loading your adapter matrices into memory.)"
+
+counselor_theme = gr.themes.Soft(
+    primary_hue="emerald",  
+    secondary_hue="stone"
+).set(
+    body_background_fill="*secondary_50", 
+    block_background_fill="white",         
+    block_border_width="1px"
+)
+
+app_title = """
+<div style="text-align: center; max-width: 650px; margin: 0 auto; padding-top: 10px;">
+  <span style='font-size: 2.5rem;'>🌱</span>
+  <h1 style="font-weight: 900; margin-bottom: 0.5rem; margin-top: 0.5rem; color: #1e293b;">
+    Supportive AI Counselor
+  </h1>
+  <p style="font-size: 1.1rem; color: #475569; margin-bottom: 1.5rem;">
+    A private, supportive, and non-judgmental space to talk about overwhelm or stress.
+  </p>
+</div>
+"""
+
+with gr.Blocks() as demo:
+    gr.HTML(app_title)
+    
+    gr.ChatInterface(
+        fn=predict,
+        textbox=gr.Textbox(
+            placeholder="Share what's on your mind today...", 
+            container=False, 
+            scale=7
+        ),
+        examples=[ 
+            "I've been feeling extremely stressed about classes lately.",
+            "It feels like I'm overwhelmed and might fail my exams.",
+            "I need to talk to someone about feeling burnt out."
+        ]
+    )
+
+if __name__ == "__main__":
+    demo.launch(theme=counselor_theme)

@@ -1,0 +1,33 @@
+# Python bytecode and runtime caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environments and virtual packages
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Operating system metadata
+.DS_Store
+Thumbs.db
+
+# IDE configurations
+.vscode/
+.idea/
+
+# Large model files and weights (to keep git history light)
+*.safetensors
+*.bin
+*.pth
+*.pt
+*.gguf
+*.ckpt
