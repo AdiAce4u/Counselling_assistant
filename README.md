@@ -15,6 +15,7 @@ The production deployment relies on a decoupled, stateless design to separate th
                                       v
 [ Hugging Face Serverless GPU ] <--- [ Base Architecture: Qwen 2.5 7B ]
                                 <--- [ Dynamic On-the-Fly LoRA Weight Injection ]
+```
 
 
 ### Frontend Tier
