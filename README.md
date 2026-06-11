@@ -3,6 +3,7 @@
 A cloud-native, end-to-end conversational AI assistant fine-tuned to provide validating, empathetic, and structurally paced therapeutic dialogue. This project leverages Parameter-Efficient Fine-Tuning (PEFT) to adapt a 7-billion parameter foundational language model into a specialized counselor interface, deployed via a high-performance serverless cloud architecture.
 
 ---
+Link to the HuggingFace Space : https://huggingface.co/spaces/sleepy-panda21/Counselling_assistant
 
 ##  Architecture Overview
 
@@ -75,3 +76,5 @@ The effectiveness of the training run is shown by comparing the models on identi
 * **Prompt Example:** *"I've been feeling completely overwhelmed with my classes lately and feel like I might fail everything."*
 * **Base Qwen Model Response Framework:** Focuses immediately on factual deduction and structural checklists. It suggests fixing schedules, analyzing specific grading criteria, and treating the issue as a tactical organization problem.
 * **Fine-Tuned Adapter Response Framework:** Shifts immediately into emotional normalization and therapeutic alignment. It prioritizes grounding the user's immediate panic, reducing isolation by clarifying that their stress is common, and framing future steps as a collaborative partnership.
+
+
