@@ -13,9 +13,30 @@ try:
 except Exception:
     client = None
 
+CRISIS_KEYWORDS = [
+    "suicide", "kill myself", "end my life", "want to die", 
+    "self harm", "hurt myself", "cut myself", "overdose", 
+    "better off dead", "end it all"
+]
+
+CRISIS_MESSAGE = """**Important Notice:** It sounds like you are going through a very difficult time. Please know that this is an AI, not a clinical professional, and it cannot provide the medical help you might need right now. 
+
+**If you are in immediate danger or experiencing a crisis, please reach out for help immediately:**
+- **Emergency Services:** Call 911 (US) or your local emergency number.
+- **National Suicide Prevention Lifeline (US):** Call or text 988 (Available 24/7)
+- **Crisis Text Line (US/Canada):** Text HOME to 741741
+
+You are not alone, and there is support available. Please connect with a human professional."""
+
 def predict(message, history):
     if not client:
         yield "Configuration Error: Hugging Face Inference client failed to initialize."
+        return
+
+    # Check for crisis keywords
+    lower_message = message.lower()
+    if any(keyword in lower_message for keyword in CRISIS_KEYWORDS):
+        yield CRISIS_MESSAGE
         return
 
     messages = [
@@ -71,8 +92,11 @@ app_title = """
   <h1 style="font-weight: 900; margin-bottom: 0.5rem; margin-top: 0.5rem; color: #1e293b;">
     Supportive AI Counselor
   </h1>
-  <p style="font-size: 1.1rem; color: #475569; margin-bottom: 1.5rem;">
+  <p style="font-size: 1.1rem; color: #475569; margin-bottom: 0.5rem;">
     A private, supportive, and non-judgmental space to talk about overwhelm or stress.
+  </p>
+  <p style="font-size: 0.85rem; color: #ef4444; background-color: #fee2e2; padding: 8px; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #f87171;">
+    <strong>Disclaimer:</strong> This is an AI assistant, not a replacement for a clinical psychiatrist or medical professional. If you are in a crisis, please contact emergency services.
   </p>
 </div>
 """
