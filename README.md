@@ -41,7 +41,7 @@ Instead of running a full-parameter backward propagation pass across all layers,
 
 The configuration used a rank scaling factor ($\alpha$) to handle structural weight updates cleanly:
 * $r = 16$ (The intrinsic low-rank dimensionality matrix space)
-* $\alpha = 32$ (The learning distribution scaling factor coefficient)
+* $\alpha = 16$ (The learning distribution scaling factor coefficient)
 
 ### 3. Compute Optimization with Unsloth
 Training was accelerated through the **Unsloth** framework, utilizing custom written Triton kernels that bypass slow standard PyTorch autograd graph overheads. This optimization delivers up to a **2x speeding factor** during gradient accumulation passes, preventing memory fragmentation spikes on single-GPU hardware configurations.
