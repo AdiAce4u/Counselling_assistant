@@ -6,7 +6,7 @@ HF_TOKEN = os.environ.get("HF_TOKEN")
 
 
 BASE_MODEL = "Qwen/Qwen2.5-7B-Instruct"
-ADAPTER_ID = "sleepy-panda21/Llama_fine_tuned"  
+ADAPTER_ID = "sleepy-panda21/Qwen_fine_tuned"  
 
 try:
     client = InferenceClient(model=BASE_MODEL, token=HF_TOKEN)
